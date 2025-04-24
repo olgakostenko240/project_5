@@ -1,15 +1,26 @@
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
 from rest_framework.viewsets import ModelViewSet
 
 from materials.models import Lesson, Well
-from materials.serializers import LessonSerializer, WellSerializer
+from materials.serializers import LessonSerializer, WellSerializer, WellDetailSerializer
 
 
 class WellViewSet(ModelViewSet):
     queryset = Well.objects.all()
-    serializer_class = WellSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return WellDetailSerializer
+        return WellSerializer
 
 
 class LessonCreateApiView(CreateAPIView):
