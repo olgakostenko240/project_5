@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from materials.models import Well, Lesson
+
 
 class User(AbstractUser):
     username = None
@@ -37,3 +39,47 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+    def __str__(self):
+        return self.email
+
+
+class Payment(models.Model):
+    CASH = "cash"
+    NON_CASH = "non_cash"
+    PAYMENT_METHOD = [(CASH, "cash"), (NON_CASH, "non_cash")]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Оплата",
+        help_text="Укажите кто произвел оплату",
+    )
+    payment_date = models.DateField(verbose_name='Дата платежа', blank=True, null=True)
+    payment_course = models.ForeignKey(
+        Well,
+        on_delete=models.CASCADE,
+        verbose_name="Оплаченный курс",
+        help_text="Укажите оплаченый курс",
+        blank=True,
+        null=True,
+    )
+    payment_lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        verbose_name="Оплаченный урок",
+        help_text="Укажите оплаченый урок",
+        blank=True,
+        null=True,
+    )
+    cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость покупки")
+    payment_method = models.CharField(
+        choices=PAYMENT_METHOD, default=CASH, verbose_name="Способ оплаты"
+    )
+
+    class Meta:
+        verbose_name = "Оплата"
+        verbose_name_plural = "Оплаты"
+
+    def __str__(self):
+        return self.payment_method
