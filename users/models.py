@@ -55,7 +55,7 @@ class Payment(models.Model):
         verbose_name="Оплата",
         help_text="Укажите кто произвел оплату",
     )
-    payment_date = models.DateField(verbose_name='Дата платежа', blank=True, null=True)
+    payment_date = models.DateField(verbose_name="Дата платежа", blank=True, null=True)
     payment_course = models.ForeignKey(
         Well,
         on_delete=models.CASCADE,
