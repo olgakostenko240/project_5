@@ -22,10 +22,20 @@ class WellViewSet(ModelViewSet):
             return WellDetailSerializer
         return WellSerializer
 
+    def perform_create(self, serializer):
+        well = serializer.save()
+        well.owner = self.request.user
+        well.save()
+
 
 class LessonCreateApiView(CreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+
+    def perform_create(self, serializer):
+        lesson = serializer.save()
+        lesson.owner = self.request.user
+        lesson.save()
 
 
 class LessonListApiView(ListAPIView):
