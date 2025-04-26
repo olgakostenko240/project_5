@@ -2,6 +2,7 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework.permissions import AllowAny
 
 from users.models import User, Payment
 from users.serializers import UserSerializers, PaymentSerializers
@@ -19,6 +20,7 @@ class PaymentViewSet(ModelViewSet):
 class UserCreateApiView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializers
+    permission_classes = (AllowAny,)
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=True)
