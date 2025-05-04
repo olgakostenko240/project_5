@@ -21,8 +21,8 @@ class WellDetailSerializer(ModelSerializer):
     lessons_count = SerializerMethodField()
     lessons = LessonSerializer(many=True, read_only=True, source="lesson_set")
 
-    def get_lessons_count(self, object):
-        return object.lesson_set.count()
+    def get_lessons_count(self, well):
+        return Lesson.objects.filter(well=well).count()
 
     class Meta:
         model = Well
