@@ -19,4 +19,4 @@ class UserSerializers(ModelSerializer):
 class UserIsAuthenticatedSerializers(ModelSerializer):
     class Meta:
         model = User
-        fields = ("email",)
+        fields = ("id","email",)
