@@ -14,6 +14,7 @@ from materials.models import Lesson, Well, Subscription
 from materials.serializers import LessonSerializer, WellSerializer, WellDetailSerializer, SubscriptionSerializer
 from materials.paginations import CustomPagination
 from users.permissions import IsModer, IsOwner
+from materials.tasks import well_update
 
 
 class WellViewSet(ModelViewSet):
@@ -39,6 +40,11 @@ class WellViewSet(ModelViewSet):
         elif self.action == "destroy":
             self.permission_classes = (~IsModer | IsOwner,)
         return super().get_permissions()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        well_update.delay(instance.pk)
+        return instance
 
 
 class LessonCreateApiView(CreateAPIView):
